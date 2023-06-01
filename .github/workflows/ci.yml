@@ -10,5 +10,5 @@ jobs:
       - uses: polarsignals/gh-actions-ps-profiling@v0.0.1
         with:
           polarsignals_cloud_token: ${{ secrets.PSToken }}
-      - run: go run ci/ci.go test
+      - run: go run main.go
 
