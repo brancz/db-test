@@ -5,13 +5,14 @@ jobs:
     name: dagger
     runs-on: ubuntu-latest
     steps:
+      - name: Extract branch name
+        shell: bash
+        run: echo "branch=$(echo ${GITHUB_REF#refs/heads/})" >>$GITHUB_OUTPUT
+        id: extract_branch
       - uses: actions/setup-go@v3
       - uses: actions/checkout@v3
-      - name: Download Parca
-        shell: bash
-        run: curl -sL https://raw.githubusercontent.com/parca-dev/parca/v0.17.0/parca.yaml > parca.yaml &&   curl -sL https://github.com/parca-dev/parca/releases/download/v0.17.0/parca_0.17.0_`uname -s`_`uname -m`.tar.gz | tar xvfz -
-      - name: Start scraping
-        shell: bash
-        run: ./parca --config-path=./parca.yaml --mode="scraper-only" --store-address="grpc.polarsignals.com:443" --bearer-token=eyJhbGciOiJFZERTQSJ9.eyJhdWQiOiJhYmQ1MmJiOC02YWNlLTQwM2MtYjEwZC01OWQ3YTAzZjQ5ZGIiLCJpYXQiOjE2ODU2OTU0MjIzOTgyMzkxNzcsImlzcyI6Imh0dHBzOi8vYXBpLnBvbGFyc2lnbmFscy5jb20vIiwianRpIjoiMGRkNzk4M2UtNWU1Ni00ODFiLTk3NGMtMDVhZDY1NTQ5ZGNlIiwicHJvamVjdElkIjoiYWJkNTJiYjgtNmFjZS00MDNjLWIxMGQtNTlkN2EwM2Y0OWRiIiwidmVyc2lvbiI6IjEuMC4wIiwid3JpdGVQcm9maWxlcyI6dHJ1ZX0.3lRpkROPWDFIUDV1c4srr6CkN938H1MUzdy5PWrpstbq6nugCLCA3e8qpUNJ7DLczFbUMHfGHttUAbhYht_zAw
-      - name: Run Dagger
-        run: go run main.go
+      - uses: polarsignals/gh-actions-ps-profiling@v0.0.1
+        with:
+          polarsignals_cloud_token: ${{ secrets.PSTOKEN }}
+          labels: 'branch=${{ steps.extract_branch.outputs.branch }};gh_run_id=${{ github.run_id }}'
+      - run: go run main.go
