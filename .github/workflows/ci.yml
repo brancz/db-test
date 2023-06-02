@@ -15,4 +15,8 @@ jobs:
         with:
           polarsignals_cloud_token: ${{ secrets.PSTOKEN }}
           labels: 'branch=${{ steps.extract_branch.outputs.branch }};gh_run_id=${{ github.run_id }}'
-      - run: go run main.go
+      - name: Run Dagger
+        run: go run main.go
+      - name: Echo contents of PS logs
+        shell: bash
+        run: cat /home/runner/work/_temp/parca-agent.log
