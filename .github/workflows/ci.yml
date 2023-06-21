@@ -11,7 +11,7 @@ jobs:
         id: extract_branch
       - uses: actions/setup-go@v3
       - uses: actions/checkout@v3
-      - uses: polarsignals/gh-actions-ps-profiling@v0.0.1
+      - uses: polarsignals/gh-actions-ps-profiling@5e57ff3fe939ffde39bc3ce2e9d4196574d3821d
         with:
           polarsignals_cloud_token: ${{ secrets.PSTOKEN }}
           labels: 'branch=${{ steps.extract_branch.outputs.branch }};gh_run_id=${{ github.run_id }}'
